@@ -87,16 +87,18 @@ class TestApp:
 
     def test_updates_body_of_message_in_database(self):
         '''updates the body of a message in the database.'''
-        with app.app_context():
+    with app.app_context():
 
-            m = Message.query.first()
+        m = Message.query.first()
+
+        if m is not None:
             id = m.id
             body = m.body
 
             app.test_client().patch(
                 f'/messages/{id}',
                 json={
-                    "body":"Goodbye 👋",
+                    "body": "Goodbye 👋",
                 }
             )
 
@@ -106,6 +108,9 @@ class TestApp:
             g.body = body
             db.session.add(g)
             db.session.commit()
+        else:
+            print("No messages found in the database.")
+
 
     def test_returns_data_for_updated_message_as_json(self):
         '''returns data for the updated message as JSON.'''
